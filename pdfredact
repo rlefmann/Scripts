@@ -1,0 +1,51 @@
+#!/bin/bash
+# Split a PDF in 1-page files, redact the files and combine the redacted files
+# back together
+# requires: pdfinfo (from poppler-utils), ghostscript, and a pdf editor (e.g. gimp)
+
+# editor can be gimp or inkscape
+pdfeditor=gimp
+
+program_not_installed() {
+	echo "The program $1 is required but it is not installed. Aborting."
+	exit 1
+}
+
+# Check if required programs are installed:
+command -v $pdfeditor > /dev/null 2>&1 || program_not_installed $pdfeditor
+command -v gs > /dev/null 2>&1 || program_not_installed ghostscript
+command -v pdfinfo > /dev/null 2>&1 || program_not_installed pdfinfo
+
+progname=$(basename "$0")
+
+if [ $# -ne 1 ]; then
+	printf "Usage: $progname PDF-FILE\n"
+	exit 1
+fi
+
+file="$1"
+
+if [ "${file##*.}" != "pdf" ]; then
+	echo "$file is not a pdf file"
+	exit 1
+fi
+
+# filepath without extension:
+filename="${file%.*}"
+
+numpages=$(pdfinfo $file | grep "Pages" | awk '{print $2}')
+unset Outfile
+
+# split pdf into single-page files:
+gs -sDEVICE=pdfwrite -dSAFER -o "$filename"-%d.pdf "$file"
+
+for i in $(seq 1 $numpages); do
+	tmpfilename="$filename-$i.pdf"
+	Outfile[$i]="$tmpfilename"
+	#$pdfeditor "$tmpfilename"  # if pdfeditor is inkscape you can put the edit command here to avoid accidentally closing all inkscape windows
+done
+
+$pdfeditor "${Outfile[@]}"
+gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE="$filename-redacted.pdf" -dBATCH "${Outfile[@]}"
+
+rm "${Outfile[@]}"
