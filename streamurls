@@ -1,0 +1,23 @@
+#!/bin/sh
+# Get video urls from streamhunter
+
+siteurl=http://streamhunters.top
+
+progname=$(basename "$0")
+
+if [ $# -ne 1 ]; then
+	echo "Usage: $0 TEAMNAME"
+	exit 1
+fi
+
+wget -O index.html "$siteurl" > /dev/null 2>&1
+
+streamurls=$(grep "$1" index.html | grep -o "/soccer/[^\']*" | sed "s|^.*$|$siteurl&|")
+
+for url in $streamurls; do
+	wget -O 'stream.html' "$url" > /dev/null 2>&1
+	#grep "iframe" stream.html | grep -o "src='[^\']*'"
+	grep "iframe" stream.html | sed -n 's|^.*src='\''\([^'\'']*\)'\''.*$|\1|p'
+done
+
+rm -rf index.html stream.html
