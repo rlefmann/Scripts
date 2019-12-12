@@ -1,0 +1,57 @@
+#!/bin/sh
+# Rename files to kebabcase, i.e. lowercase words separated by dashes.
+
+PATTERN='
+s/[Ää]/ae/g;				# replace umlauts
+s/[Öö]/oe/g;  
+s/[Üü]/ue/g;
+s/[^a-z0-9.]/-/g;		# replace special characters with dashes
+s/^--*//;						# remove leading dashes
+s/--*$//;						# remove trailing dashes
+s/--*/-/g;					# compress dash sequences
+s/-\./\./g;					# remove dash before dot
+s/\.-/\./g;					# remove dash after dot
+s/\.\.*/\./g				# compress dot sequences
+'
+
+progname=$(basename "$0")
+
+usage() {
+	echo "Usage: $progname FILES ..."
+	echo "       $progname -h"
+}
+
+help() {
+	echo "Rename files to kebabcase, i.e. lowercase words separated by dashes."
+}
+
+kebabcase() {
+	echo "$1" | tr '[:upper:]' '[:lower:]' | sed "$PATTERN"
+}
+
+
+if [ $# -lt 1 ]; then
+	usage
+	exit 1
+fi
+
+if [ "$1" = "-h" ]; then
+	help
+	echo
+	usage
+	exit 0
+fi
+
+for file in "$@"; do
+	dname=$(dirname "$file")
+	bname=$(basename "$file")
+	newname=$(kebabcase "$bname")
+	
+	if [ -z "$newname" ] || [ "$newname" = "." ]; then
+		echo "$progname: not renaming $bname"
+	elif [ "$newname" = "$bname" ]; then
+		echo "$progname: $bname already has the correct format"
+	else
+		mv "$file" "$dname/$newname"
+	fi
+done
