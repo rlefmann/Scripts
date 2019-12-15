@@ -1,0 +1,35 @@
+#!/bin/sh
+# Split PDF into single-page files
+# Requires: pdfinfo (from poppler-utils) and ghostscript
+
+program_not_installed() {
+	echo "The program $1 is required but it is not installed. Aborting."
+	exit 1
+}
+
+progname=$(basename "$0")
+
+if [ $# -ne 1 ]; then
+	echo "Usage: $progname PDF-FILE"
+	exit 1
+fi
+
+command -v gs > /dev/null 2>&1 || program_not_installed ghostscript
+command -v pdfinfo > /dev/null 2>&1 || program_not_installed pdfinfo
+
+file="$1"
+
+if [ "${file##*.}" != "pdf" ]; then
+	echo "$file is not a pdf file. Aborting."
+	exit 1
+fi
+
+dirname=$(dirname "$file")
+# filepath without extension:
+filename="${file%.*}"
+
+# number of digits of page count (+1) to pad page number in filename of
+# single-page files with the appropriate number of leading zeros
+numdigits=$(pdfinfo "$file" | grep "Pages" | awk '{print $2}' | wc -m)
+
+gs -q -sDEVICE=pdfwrite -dSAFER -o "$filename-%0${numdigits}d.pdf" "$file" > /dev/null 2>&1

@@ -1,0 +1,14 @@
+#!/bin/sh
+# Combine several pdf files.
+
+progname=$(basename "$0")
+
+if [ $# -lt 2 ]; then
+	printf "Usage: $progname DEST SOURCE...\n"
+	exit 1
+fi
+
+destfile="$1"
+shift
+
+gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE="$destfile" -dBATCH "$@" > /dev/null 2>&1
