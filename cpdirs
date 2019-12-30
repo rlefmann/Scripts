@@ -1,0 +1,70 @@
+#!/bin/sh
+# Create a copy of a directory skeleton. DSTDIR must exist,
+# must not be a subdiretory of SRCDIR and must be an empty directory.
+
+progname=$(basename "$0")
+
+usage() {
+	echo "Usage: $progname SRCDIR DSTDIR"
+}
+
+checkdir() {
+	if [ ! -d "$1" ]; then
+		echo "$progname: '$1' is not a directory. Aborting." 1>&2
+		exit 1
+	fi
+}
+
+abspath() {
+  # $1 : relative filename
+  echo "$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+}
+
+checkemptydir() {
+	if find "$1" -mindepth 1 -print -quit 2> /dev/null | grep -q .; then
+		echo "$progname: Directory '$1' is not empty. Aborting." 1>&2
+		exit 1
+	fi
+}
+
+checknotsubdir() {
+	# $1 : dir
+	# $2 : potential subdir
+	case "$2" in
+		"$1"/*)
+			echo "$progname: DSTDIR is a subdir of SRCDIR. Aborting." 1>&2
+			exit 1;;
+	esac
+}
+
+cpdirskeleton() {
+	# $1 : srcdir
+	# $2 : dstdir
+	dstdir=$(abspath "$2")
+	(cd "$1" && find . -type d -links 2 -exec mkdir -p "$dstdir/{}" \;)
+}
+
+
+if [ $# -ne 2 ]; then
+	usage
+	exit 1
+fi
+
+srcdir="$1"
+dstdir="$2"
+srcdirabs=$(abspath "$srcdir")
+dstdirabs=$(abspath "$dstdir")
+
+checkdir "$srcdir"
+checkdir "$dstdir"
+
+if [ "$srcdirabs" = "$dstdirabs" ]; then
+	echo "$progname: SRCDIR and DSTDIR are the same. Aborting." 1>&2
+	exit 1
+fi
+
+checkemptydir "$dstdir"
+checknotsubdir "$srcdirabs" "$dstdirabs"
+
+# copy directory structure:
+cpdirskeleton "$srcdir" "$dstdirabs"
