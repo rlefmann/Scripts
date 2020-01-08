@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# List packages that were installed manually by the user without printing the version number
+
+xbps-query -m | rev | cut -d '-' -f 2- | rev
