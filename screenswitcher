@@ -18,7 +18,11 @@ if [ $# -ne 1 ]; then
 elif [ "$1" = '-l' ]; then
 	xrandr --output $laptopscreen --auto --primary --output $externscreen --off
 elif [ "$1" = '-x' ]; then
-	xrandr --output $externscreen --auto --primary --output $laptopscreen --off
+	if xrandr -q | grep "$externscreen connected" >/dev/null 2>&1; then
+		xrandr --output $externscreen --auto --primary --output $laptopscreen --off
+	else
+		echo "Error: external monitor not connected."
+	fi
 else
 	printf "Invalid option: %s\n" "$1"
 	usage
