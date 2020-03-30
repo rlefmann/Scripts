@@ -1,0 +1,25 @@
+#!/bin/sh
+# Switch between laptop screen output and external screen, so that only one
+# monitor is active at a time.
+
+laptopscreen="LVDS1"
+externscreen="HDMI1"
+
+progname=$(basename "$0")
+
+usage() {
+	echo "Usage: $progname -l to use laptop display"
+	echo "       $progname -x to use external display"
+	exit 1
+}
+
+if [ $# -ne 1 ]; then
+	usage
+elif [ "$1" = '-l' ]; then
+	xrandr --output $laptopscreen --auto --primary --output $externscreen --off
+elif [ "$1" = '-x' ]; then
+	xrandr --output $externscreen --auto --primary --output $laptopscreen --off
+else
+	printf "Invalid option: %s\n" "$1"
+	usage
+fi
