@@ -2,16 +2,16 @@
 # Rename files to kebabcase, i.e. lowercase words separated by dashes.
 
 PATTERN='
-s/[Ää]/ae/g;				# replace umlauts
-s/[Öö]/oe/g;  
+s/[Ää]/ae/g;       # replace umlauts
+s/[Öö]/oe/g;
 s/[Üü]/ue/g;
-s/[^a-z0-9.]/-/g;		# replace special characters with dashes
-s/^--*//;						# remove leading dashes
-s/--*$//;						# remove trailing dashes
-s/--*/-/g;					# compress dash sequences
-s/-\./\./g;					# remove dash before dot
-s/\.-/\./g;					# remove dash after dot
-s/\.\.*/\./g				# compress dot sequences
+s/[^a-z0-9.]/-/g;  # replace special characters with dashes
+s/^--*//;          # remove leading dashes
+s/--*$//;          # remove trailing dashes
+s/--*/-/g;         # compress dash sequences
+s/-\./\./g;        # remove dash before dot
+s/\.-/\./g;        # remove dash after dot
+s/\.\.*/\./g       # compress dot sequences
 '
 
 progname=$(basename "$0")
