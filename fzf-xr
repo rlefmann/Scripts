@@ -1,0 +1,5 @@
+#!/bin/sh
+# Use fzf to select packages for removal
+
+prog=$(xbps-query -m | fzf)
+[ ! -z "$prog" ] && sudo xbps-remove -R "$prog"

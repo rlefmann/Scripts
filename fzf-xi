@@ -1,0 +1,5 @@
+#!/bin/sh
+# Use fzf to select packages for installation
+
+prog=$(xbps-query -Rs '' | fzf | cut -d ' ' -f 2)
+[ ! -z "$prog" ] && sudo xbps-install "$prog"
