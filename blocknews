@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "127.0.0.1 spiegel.de" >> /etc/hosts
+echo "127.0.0.1 www.spiegel.de" >> /etc/hosts
+echo "127.0.0.1 faz.net" >> /etc/hosts
+echo "127.0.0.1 www.faz.net" >> /etc/hosts
+echo "127.0.0.1 nw.de" >> /etc/hosts
+echo "127.0.0.1 www.nw.de" >> /etc/hosts
+echo "127.0.0.1 westfalen-blatt.de" >> /etc/hosts
+echo "127.0.0.1 www.westfalen-blatt.de" >> /etc/hosts
+echo "127.0.0.1 zeit.de" >> /etc/hosts
+echo "127.0.0.1 www.zeit.de" >> /etc/hosts

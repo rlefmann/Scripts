@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "127.0.0.1 www.youtube.com" >> /etc/hosts
+echo "127.0.0.1 youtube.com" >> /etc/hosts
