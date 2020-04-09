@@ -48,9 +48,9 @@ for file in "$@"; do
 	newname=$(kebabcase "$bname")
 	
 	if [ -z "$newname" ] || [ "$newname" = "." ]; then
-		echo "$progname: not renaming $bname"
+		echo "$progname: not renaming $bname" 1>&2
 	elif [ "$newname" = "$bname" ]; then
-		echo "$progname: $bname already has the correct format"
+		echo "$progname: $bname already has the correct format" 1>&2
 	else
 		mv "$file" "$dname/$newname"
 	fi
