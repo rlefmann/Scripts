@@ -1,0 +1,4 @@
+#!/bin/sh
+
+query=$(echo "$@" | sed 's/[[:space:]][[:space:]]*/+/g')
+$BROWSER "https://www.google.com/search?q=$query"
