@@ -1,0 +1,4 @@
+#!/bin/sh
+# Select a manpage using dmenu and display it as a pdf file.
+
+man -k . | dmenu -l 30 | cut -d '(' -f 1 | xargs -r man -Tpdf | zathura -
