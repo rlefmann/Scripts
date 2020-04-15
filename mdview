@@ -1,0 +1,15 @@
+#!/bin/sh
+
+progname=$(basename "$0")
+
+usage() {
+	echo "Usage: $progname FILE"
+	exit 1
+}
+
+[ -z $1 ] && usage
+
+tmpfile=$(mktemp)
+lowdown -s $1 > $tmpfile
+surf $tmpfile
+rm $tmpfile
