@@ -8,8 +8,11 @@ usage() {
 }
 
 [ -z $1 ] && usage
+if [ -z $BROWSER ]; then
+	BROWSER=surf
+fi
 
 tmpfile=$(mktemp)
 lowdown -s $1 > $tmpfile
-surf $tmpfile
+$BROWSER $tmpfile
 rm $tmpfile
