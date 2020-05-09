@@ -1,0 +1,50 @@
+#!/bin/sh
+
+titleatx() {
+  sed '1s/^##*[ \t]*//; 1s/^.*$/title: &/'
+}
+
+titlesetext() {
+  sed '1s/^.*$/title: &/; 2d'
+}
+
+pdfconvert() {
+  lowdown -s -T ms | pdfroff -tki -mspdf -Kutf8 | zathura -
+}
+
+imagelist() {
+  sed -nE 's/^!\[.*\]\((.*\.(jpg|png))\).*$/\1/p' "$1"
+}
+
+# convert all images embedded into md file to eps format:
+convert2eps() {
+  for image in $(imagelist "$1"); do
+    epsname="${image%.*}".eps
+    [ ! -f "$epsname" ] && convert "$image" "$epsname"
+  done
+}
+
+# delete all of the previously created eps images:
+delete_eps() {
+  for image in $(imagelist "$1"); do
+    epsname="${image%.*}".eps
+    rm "$epsname"
+  done
+}
+
+
+replacewitheps() {
+  sed -E 's/^(!\[.*\])\(((.*)\.(jpg|png))\).*$/\1(\3.eps)/' "$1"
+}
+
+[ -z "$1" ] && exit 1
+
+convert2eps "$1"
+
+title=$(sed -n '1p' "$1")
+case "$title" in
+  '#'*) replacewitheps "$1" | titleatx | pdfconvert ;;
+  *) replacewitheps "$1" | titlesetext | pdfconvert ;;
+esac
+
+delete_eps "$1"
