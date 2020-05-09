@@ -9,7 +9,7 @@ usage() {
 
 [ -z $1 ] && usage
 if [ -z $BROWSER ]; then
-	BROWSER=surf
+	BROWSER=vimb
 fi
 
 tmpfile=$(mktemp)
