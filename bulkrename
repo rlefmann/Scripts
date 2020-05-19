@@ -1,0 +1,21 @@
+#!/bin/sh
+# Bulk-rename files using your text editor.
+
+progname=$(basename "$0")
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $progname FILE [FILE...]" 1>&2
+  exit 1
+fi
+
+filename_list_file=$(mktemp --suffix=".lst")
+
+IFS='\n'
+for f in $@; do
+  echo "$f"
+done | sed 's/^.*$/mv -i "&" "&"/g' > "$filename_list_file"
+unset IFS
+
+$EDITOR "$filename_list_file"
+sh "$filename_list_file"
+exit 0
