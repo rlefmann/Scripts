@@ -11,7 +11,7 @@ fi
 filename_list_file=$(mktemp --suffix=".lst")
 
 IFS='\n'
-for f in $@; do
+for f in "$@"; do
   echo "$f"
 done | sed 's/^.*$/mv -i "&" "&"/g' > "$filename_list_file"
 unset IFS
