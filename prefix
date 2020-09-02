@@ -1,0 +1,27 @@
+#!/bin/sh
+# Prefix file names with a specified string, followed by a dash.
+
+progname=$(basename "$0")
+
+usage() {
+  echo "Usage: $progname PREFIX FILES ..."
+}
+
+if [ "$#" -lt 2 ]; then
+  usage
+  exit 1
+fi
+
+fileprefix="$1"
+
+shift
+for file in "$@"; do
+  dname=$(dirname "$file")
+  bname=$(basename "$file")
+  newname="$dname/$fileprefix-$bname"
+  if [ -e "$newname" ]; then
+    echo "file `$newname` exists" 1>&2
+  else
+	  mv "$file" "$newname"
+	fi
+done
