@@ -8,6 +8,9 @@ if [ $# -lt 1 ]; then
 fi
 
 session=$(kak -l | dmenu -p "Choose kak session")
+if [ -z "$session" ]; then
+  exit 1
+fi
 
 for path in "$@"
 do
