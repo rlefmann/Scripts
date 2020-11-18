@@ -1,0 +1,15 @@
+#!/bin/sh
+# Open file(s) in existing kak session.
+# Choose the session using dmenu.
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 FILE..." 1>& 2
+  exit 1
+fi
+
+session=$(kak -l | dmenu -p "Choose kak session")
+
+for path in "$@"
+do
+	printf 'eval edit %s' $(realpath "$path") | kak -p "$session"
+done
