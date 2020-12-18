@@ -1,0 +1,12 @@
+#!/bin/sh
+# This is just a script to restart my external Thinkpad keyboard
+# by removing the corresponding kernel module and adding it again.
+# It solves an issue where the trackpoint scroll function is not
+# working properly after the system has been suspended.
+
+sudo modprobe -r usbhid
+sudo modprobe usbhid
+
+# I have no idea why I have to wait before setting the keymap?!
+sleep 0.5s
+setxkbmap -layout de -option caps:escape
