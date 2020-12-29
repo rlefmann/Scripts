@@ -1,0 +1,11 @@
+#!/bin/sh
+# Downloads paragraphs of lorem ipsum text from mataphorpsum.com
+
+progname=$(basename "$0")
+
+if [ "$#" -ne 1 ]; then
+	echo "Usage: $progname NUM"
+	exit 1
+fi
+
+curl -s http://metaphorpsum.com/paragraphs/"$1" && printf "\n"
