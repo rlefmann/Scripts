@@ -1,0 +1,23 @@
+#!/bin/sh
+# Moves files into subdirectories with, each with
+# a fixed number of files in them.
+# The script reads the file names from stdin, one
+# name per line.
+# Example usage:
+# `ls -1 "*.jpg" | sort -n | subdirsplit 100`
+
+if [ $# -ne 1 ]; then
+	echo "Usage: $0 NUM_FILES_PER_DIR" 1>&2
+	exit 1
+fi
+
+split -l $1 -d -a 5 - "split"
+
+for f in split*;
+do
+	d="dir_$f"
+	mkdir "$d"
+	mv $(cat "$f") "$d"
+done
+
+rm split*
