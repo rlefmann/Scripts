@@ -1,0 +1,12 @@
+#!/bin/sh
+# Resize images with the shorter side to a specific target size.
+
+SIZE_SHORTEST_SIDE=1280
+OUTDIR="./Resized"
+
+mkdir "$OUTDIR"
+
+for f in "$@"
+do
+	convert -resize '1280x1280^>' "$f" "$OUTDIR/$f"
+done
