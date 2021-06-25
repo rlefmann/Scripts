@@ -1,0 +1,23 @@
+# Rename a file while preserving its extension.
+# The extension is considered to be the substring
+# of the basename of the file path, starting after
+# the first dot.
+
+progname=$(basename "$0")
+
+if [ $# -lt 2 ]; then
+	echo "Usage: $progname SOURCE NEWNAME"
+	echo
+	echo "Rename SOURCE to NEWNAME while preserving the file extension"
+	exit 1
+fi
+
+dname=$(dirname "$1")
+bname=$(basename "$1")
+xname="${bname#*.}"
+wxname="${bname%%.*}"
+
+[ -z "$wxname" ] && exit 1
+[ -z "$xname" ] && exit 1
+
+mv "$1" "$dname/$2.$xname"
