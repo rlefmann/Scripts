@@ -5,7 +5,7 @@
 
 progname=$(basename "$0")
 
-if [ $# -lt 2 ]; then
+if [ $# -ne 2 ]; then
 	echo "Usage: $progname SOURCE NEWNAME"
 	echo
 	echo "Rename SOURCE to NEWNAME while preserving the file extension"
