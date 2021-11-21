@@ -1,0 +1,21 @@
+#!/bin/sh
+# Resize images with the shorter side to a specific target size.
+
+SIZE_SHORTEST_SIDE=1280
+
+filename_append () {
+	filepath="$1"
+	postfix="$2"
+
+	filepath_without_ext="${filepath%.*}"
+	ext="${filepath##*.}"
+
+	printf '%s\n' "$filepath_without_ext-$postfix.$ext"
+}
+
+
+for f in "$@"
+do
+	filepath_resized=$(filename_append "$f" resized)
+	convert -resize '1280x1280^>' "$f" "$filepath_resized"
+done
